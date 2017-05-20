@@ -4,6 +4,14 @@ class Task {
         this.done = false;
         this.title = title;
     }
+
+    editTitle(newTitle) {
+        this.title = newTitle;
+    }
+
+    changeStatus() {
+        this.done = !this.done;
+    }
 }
 
 //-->Describe a TaskList
@@ -14,6 +22,10 @@ class TaskList {
 
     add(task) {
         this.tasks.push(task);
+    }
+
+    remove(id) {
+        this.tasks.splice(id, 1);
     }
 }
 
@@ -34,13 +46,24 @@ function drawTasks(tasks) {
     let txt = '';
     for (var t in tasks) {
         let status = tasks[t].done ? 'checked' : 'unchecked';
-        txt += '<tr><td><input type="checkbox" ' + status + '></td>' +
+        txt += '<tr><td><input type="checkbox" onclick="changeTaskStatus(' + t + ')"' + status + '"></td>' +
                     '<td>' + tasks[t].title + '</td>' +
 					'<td><button type="button">edit</button></td>' +
-					'<td><button type="button">remove</button></td></tr>';
+					'<td><button type="button" onclick="removeTask(' + t + ')">remove</button></td></tr>';
 
     }
     document.getElementById('taskListTable').innerHTML = txt;
+}
+
+//Change Task status when checkbox clicked
+function changeTaskStatus(id) {
+    _taskList.tasks[id].changeStatus();
+}
+
+function removeTask(id) {
+    _taskList.remove(id);
+    //redraw a table
+    drawTasks(_taskList.tasks);
 }
 
 //-->Check if client supports LocalStorage
