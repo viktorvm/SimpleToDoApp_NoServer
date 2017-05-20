@@ -1,3 +1,6 @@
+//---------------------------
+//      Classes Definition
+//---------------------------
 //-->Describe a Task
 class Task {
     constructor(title) {
@@ -27,11 +30,41 @@ class TaskList {
     remove(id) {
         this.tasks.splice(id, 1);
     }
+
+    sort() {
+        function compare(a,b) {
+            if (a.title < b.title)
+              return -1;
+            if (a.title > b.title)
+              return 1;
+            return 0;
+        }
+        this.tasks.sort(compare);
+    }
+
+    reverse() {
+        function compare(a,b) {
+            if (a.title < b.title)
+              return 1;
+            if (a.title > b.title)
+              return -1;
+            return 0;
+        }
+        this.tasks.sort(compare);
+    }
 }
 
+//---------------------------
+//    Variables Definition
+//---------------------------
 //-->All Tasks are Here
 var _taskList = new TaskList();
 
+
+
+//---------------------------
+//    Functions Definition
+//---------------------------
 //-->Add new task when button pressed
 function addTask() {
     title = document.getElementById('titleInput').value;
@@ -44,7 +77,7 @@ function addTask() {
 //-->Draw given Tasks in a Table
 function drawTasks(tasks) {
     let txt = '';
-    for (var t in tasks) {
+    for (let t in tasks) {
         let status = tasks[t].done ? 'checked' : 'unchecked';
         txt += '<tr><td>' + (Number(t) + 1) + '</td>' +
                     '<td><input type="checkbox" onclick="changeTaskStatus(' + t + ')"' + status + '"></td>' +
@@ -77,7 +110,7 @@ function editTask(id) {
     if (inp.readOnly) {
         inp.readOnly = false;
         btn.value = 'save';
-        help.innerHTML = 'Press Escape in input to cancel editing Task';
+        help.innerHTML = 'Press Escape in input to cancel editing';
 
         inp.addEventListener('keydown', function(e) {
             if (e.keyCode == 27) {
@@ -91,6 +124,16 @@ function editTask(id) {
         btn.value = 'edit';
         help.innerHTML = 'Task ' + (Number(id) + 1) + ' title successfully changed';
     }
+}
+
+//-->Sorting
+function sortTasks() {
+    _taskList.sort();
+    drawTasks(_taskList.tasks);
+}
+function reverseTasks() {
+    _taskList.reverse();
+    drawTasks(_taskList.tasks);
 }
 
 //-->Check if client supports LocalStorage
