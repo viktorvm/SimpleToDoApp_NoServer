@@ -1,0 +1,41 @@
+<html oncontextmenu="return false;" class="childdoc">
+	<head>
+		<title>VasilenkoVM. ToDo web application without server</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<!-- Подключение внешних css-стилей-->
+		<link href="css/styles.css" rel="stylesheet">
+
+		<!-- Подключение внешних js-скриптов-->
+		<script src="js/engine.js" type="text/javascript"></script>
+
+		<!-- Описание внутренних js-скриптов-->
+		<script language="JavaScript">
+			window.onload = function() {
+				supports_html5_storage();
+			}
+		</script>
+	</head>
+
+	<!-- Описание тела html-->
+	<body>
+		<h1>
+			Simple Task List by VasilenkoVM
+		</h1>
+		<input type="text">
+		<button type="button">Add</button>
+		<table>
+			<!-- Описание основной области отображения-->
+			<tbody>
+				<tr>
+					<td>Done</td>
+					<td>Task Title</td>
+					<td>Edit</td>
+                    <td>Remove</td>
+				</tr>
+				<tbody id="subTblTune">
+				</tbody>
+			</tbody>
+  		</table>
+	</body>
+</html>
