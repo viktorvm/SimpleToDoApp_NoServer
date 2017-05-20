@@ -12,7 +12,7 @@
 		<!-- Описание внутренних js-скриптов-->
 		<script language="JavaScript">
 			window.onload = function() {
-				supports_html5_storage();
+				<!--init();-->
 			}
 		</script>
 	</head>
@@ -22,19 +22,17 @@
 		<h1>
 			Simple Task List by VasilenkoVM
 		</h1>
-		<input type="text">
-		<button type="button">Add</button>
+		<input type="text" id="titleInput">
+		<button type="button" onclick="addTask()">Add</button>
 		<table>
 			<!-- Описание основной области отображения-->
-			<tbody>
-				<tr>
-					<td>Done</td>
-					<td>Task Title</td>
-					<td>Edit</td>
-                    <td>Remove</td>
-				</tr>
-				<tbody id="subTblTune">
-				</tbody>
+			<tr>
+				<td>Done</td>
+				<td>Task Title</td>
+				<td>Edit</td>
+                   <td>Remove</td>
+			</tr>
+			<tbody id="taskListTable">
 			</tbody>
   		</table>
 	</body>
