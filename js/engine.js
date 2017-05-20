@@ -3,8 +3,8 @@
 //---------------------------
 //-->Describe a Task
 class Task {
-    constructor(title) {
-        this.done = false;
+    constructor(title, done) {
+        this.done = done ? done : false;
         this.title = title;
     }
 
@@ -23,8 +23,15 @@ class TaskList {
         this.tasks = [];
     }
 
-    add(task) {
-        this.tasks.push(task);
+    parseStorage(str) {
+        let obj = JSON.parse(str);
+        for (let t in obj['tasks']) {
+            this.add(obj['tasks'][t].title, obj['tasks'][t].done);
+        }
+    }
+
+    add(title, done) {
+        this.tasks.push(new Task(title, done));
     }
 
     remove(id) {
@@ -60,27 +67,50 @@ class TaskList {
 //-->All Tasks are Here
 var _taskList = new TaskList();
 
+//-->Has LocalStorage
+var hasLS = supports_html5_storage();
 
 
 //---------------------------
 //    Functions Definition
 //---------------------------
+//-->At first load checking if Tasks info exists in localStorage
+function init() {
+    if (hasLS) {
+        if (localStorage.getItem('_taskList')) {
+            _taskList.parseStorage(localStorage.getItem('_taskList'));
+            drawTasks(_taskList.tasks);
+        }
+    } else {
+        document.getElementById('helpDiv') = 'Your data will be lost after you close or reload this page!';
+    }
+}
+
 //-->Add new task when button pressed
 function addTask() {
-    title = document.getElementById('titleInput').value;
-    let task = new Task(title);
-    _taskList.add(task);
+    let title = document.getElementById('titleInput').value;
+    if (!title) {
+        alert('Plaese enter a Task Title');
+        return;
+    }
 
+    _taskList.add(title);
     drawTasks(_taskList.tasks);
+
+    if (hasLS) {
+       localStorage.setItem('_taskList', JSON.stringify(_taskList));
+    }
 }
 
 //-->Draw given Tasks in a Table
 function drawTasks(tasks) {
     let txt = '';
     for (let t in tasks) {
-        let status = tasks[t].done ? 'checked' : 'unchecked';
+        console.log(tasks[t].done)
+        let status = tasks[t].done ? 'checked="checked"' : '';
+        console.log(status);
         txt += '<tr><td>' + (Number(t) + 1) + '</td>' +
-                    '<td><input type="checkbox" onclick="changeTaskStatus(' + t + ')"' + status + '"></td>' +
+                    '<td><input type="checkbox" onclick="changeTaskStatus(' + t + ')" ' + status + '"></td>' +
                     '<td><input type="text" id="task' + t + 'Title" value="' + tasks[t].title + '" readonly></td>' +
 					'<td><input type="button" id="task' + t + 'EditBtn" onclick="editTask(' + t + ')" value="edit"></td>' +
 					'<td><input type="button" onclick="removeTask(' + t + ')" value="remove"></td></tr>';
@@ -89,19 +119,26 @@ function drawTasks(tasks) {
     document.getElementById('taskListTable').innerHTML = txt;
 }
 
-//Change Task status when checkbox clicked
+//-->Change Task status when checkbox clicked
 function changeTaskStatus(id) {
     _taskList.tasks[id].changeStatus();
+    if (hasLS) {
+       localStorage.setItem('_taskList', JSON.stringify(_taskList));
+    }
 }
 
-//Remove Task from the List
+//-->Remove Task from the List
 function removeTask(id) {
     _taskList.remove(id);
     //redraw a table
     drawTasks(_taskList.tasks);
+
+    if (hasLS) {
+       localStorage.setItem('_taskList', JSON.stringify(_taskList));
+    }
 }
 
-//Edit Task title when button is clicked
+//-->Edit Task title when button is clicked
 function editTask(id) {
     let inp = document.getElementById('task' + id + 'Title');
     let btn = document.getElementById('task' + id + 'EditBtn');
@@ -116,12 +153,18 @@ function editTask(id) {
             if (e.keyCode == 27) {
                 inp.readOnly = true;
                 btn.value = 'edit';
+                help.innerHTML = '';
             }
         });
     } else {
         _taskList.tasks[id].editTitle(inp.value);
         inp.readOnly = true;
         btn.value = 'edit';
+
+        if (hasLS) {
+            localStorage.setItem('_taskList', JSON.stringify(_taskList));
+        }
+
         help.innerHTML = 'Task ' + (Number(id) + 1) + ' title successfully changed';
     }
 }
@@ -139,8 +182,8 @@ function reverseTasks() {
 //-->Check if client supports LocalStorage
 function supports_html5_storage() {
     try {
-        console.log('localStorage' in window && window['localStorage'] !== null);
+        return 'localStorage' in window && window['localStorage'] !== null;
 } catch (e) {
-        console.log('no storage');
+        return false;
     }
 }
