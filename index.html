@@ -23,17 +23,19 @@
 			Simple Task List by VasilenkoVM
 		</h1>
 		<input type="text" id="titleInput">
-		<button type="button" onclick="addTask()">Add</button>
-		<br><button type="button" onclick="sortTasks()">Sort</button>
-		<button type="button" onclick="reverseTasks()">Reverse</button>
+		<input type="button" onclick="addTask()" value="Add">
 		<table>
 			<!-- Описание основной области отображения-->
 			<tr>
-				<td>ID</td>
-				<td>Done</td>
-				<td>Task Title</td>
-				<td>Edit</td>
-                <td>Remove</td>
+				<th>ID</th>
+				<th>Done</th>
+				<th>
+					Task Title
+					<img onclick="sortTasks()" src="img/asc.gif">
+					<img onclick="reverseTasks()" src="img/desc.gif">
+				</th>
+				<th>Edit</th>
+                <th>Remove</th>
 			</tr>
 			<tbody id="taskListTable">
 			</tbody>
